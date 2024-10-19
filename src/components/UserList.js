@@ -31,16 +31,18 @@ const UserList = () => {
             <h2 className="text-2xl font-bold mb-4">User Management</h2>
             <table className="min-w-full bg-white">
                 <thead>
-                    <tr>
-                        <th className="py-2">ID</th>
-                        <th className="py-2">Email</th>
-                        <th className="py-2">Role</th>
-                        <th className="py-2">Actions</th>
+                    <tr className='text-left'>
+                        <th className="py-2 px-4">Sr.</th>
+                        <th className="py-2 px-4">ID</th>
+                        <th className="py-2 px-4">Email</th>
+                        <th className="py-2 px-4">Role</th>
+                        <th className="py-2 px-4">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {users.map(user => (
+                    {users.map((user, index) => (
                         <tr key={user.id} className="border-b">
+                            <td className="py-2 px-4">{index}</td>
                             <td className="py-2 px-4">{user.id}</td>
                             <td className="py-2 px-4">{user.email}</td>
                             <td className="py-2 px-4">{user.role}</td>
