@@ -1,12 +1,20 @@
 import React, { useState } from 'react';
+import axiosInstance from '../axiosConfig';
 
 const Feedback = () => {
     const [feedback, setFeedback] = useState('');
     const [rating, setRating] = useState(5);
     const [submitted, setSubmitted] = useState(false);
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
+        try {
+            const resp = await axiosInstance.post(`/user/feedback?id=${localStorage.getItem('uid')}`, {feedback,rating})
+            console.log(resp.data)
+        } catch (error) {
+            console.log(error)
+            
+        }
 
         // Here, you would typically send the feedback to an API for processing
         console.log({ feedback, rating });

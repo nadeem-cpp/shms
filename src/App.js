@@ -4,9 +4,8 @@ import Signup from './components/Signup';
 import ProfilePage from './components/ProfilePage';
 import Doctor from './Dashboards/Doctor';
 import Patient from './Dashboards/Patient';
-// import AdminDashboard from './components/AdminDashboard';
-// import DoctorDashboard from './components/DoctorDashboard';
-// import PatientDashboard from './components/PatientDashboard';
+import Admin from './Dashboards/Admin';
+
 
 function App() {
   return (
@@ -15,7 +14,7 @@ function App() {
         <Route path="/" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/profile" element={<ProfilePage />} />
-        {/* <Route path="/admin-dashboard" element={<AdminDashboard />} /> */}
+        <Route path="/admin-dashboard" element={<Admin />} />
         <Route path="/doctor-dashboard" element={<Doctor />} />
         <Route path="/patient-dashboard" element={<Patient />} />
         {/* Add other routes as needed */}
