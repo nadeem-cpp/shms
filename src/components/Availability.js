@@ -53,6 +53,7 @@ const Availability = () => {
             const uid = localStorage.getItem('uid');
             const resp = await axiosInstance.post(`/doctor/update_schedule/${uid}`, availability);
             console.log('Schedule updated:', resp.data);
+            alert("schedule updated successfully")
         } catch (error) {
             console.error('Error updating schedule:', error);
             setError('Failed to update schedule.');

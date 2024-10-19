@@ -68,7 +68,7 @@ const Home = () => {
             } else {
                 console.log(newRecord)
                 const resp = await axiosInstance.post('/records/add', newRecord);
-                let record = { ...newRecord, patient_name: resp.data.patient_name, record_date: new Date() };
+                let record = { ...newRecord, name: resp.data.patient_name, record_date: new Date() };
                 setPatientRecords([...patientRecords, record]);
             }
             setShowForm(false);
