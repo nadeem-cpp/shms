@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Home from '../components/Home';
+import Records from '../components/Home';
 import Appointments from '../components/Appointments';
 import AddAppointment from '../components/AddAppointment';
 import HealthMetrics from '../components/HealthMetrics';
@@ -9,50 +9,14 @@ import Feedback from '../components/Feedback';
 const PatientDashboard = () => {
     const [activeTab, setActiveTab] = useState('home');
 
-    const patientData = {
-        "latest_metrics": {
-            "blood_pressure": 45,
-            "date_recorded": "2024-10-17 13:41:51.554015",
-            "heart_rate": 34,
-            "temperature": 38.0,
-            "weight": 50.0
-        },
-        "medical_history": [
-            {
-                "date": "2024-10-18 10:34:17.517599",
-                "diagnosis": "kjhkj",
-                "doctor_id": 1,
-                "treatment": [
-                    {
-                        "end": "2024-10-08",
-                        "frequency": "kjh",
-                        "medicine": "hkjh",
-                        "start": "2024-10-16"
-                    }
-                ]
-            },
-            // more history
-        ],
-        "patient_info": {
-            "address": "chuadry park lajpat road shahdara lahore",
-            "contact_no": "03067494083",
-            "date_of_birth": "2024-10-08",
-            "gender": "male",
-            "name": "Muhammad Nadeem"
-        }
-    };
-
-
     const renderContent = () => {
         switch (activeTab) {
             case 'home':
                 return (
-                    <>
-                        <HealthMetrics />
-
-                        <Home />
-                    </>
+                    <HealthMetrics />
                 );
+            case 'records':
+                return <Records/>
             case 'appointments':
                 return <Appointments />;
             case 'add':
@@ -62,7 +26,7 @@ const PatientDashboard = () => {
             case 'review':
                 return <Feedback/>;
             default:
-                return <Home />;
+                return <HealthMetrics />;
         }
     };
 
@@ -77,6 +41,13 @@ const PatientDashboard = () => {
                         className={`py-2 px-4 hover:bg-blue-800 rounded ${activeTab === 'home' ? 'bg-blue-800' : ''}`}
                     >
                         Home
+                    </button>
+
+                    <button
+                        onClick={() => setActiveTab('records')}
+                        className={`py-2 px-4 hover:bg-blue-800 rounded ${activeTab === 'records' ? 'bg-blue-800' : ''}`}
+                    >
+                        Records
                     </button>
                     <button
                         onClick={() => setActiveTab('appointments')}

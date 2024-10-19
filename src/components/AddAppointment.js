@@ -53,11 +53,10 @@ const AddAppointment = () => {
         fetchDoctorSchedule(doctorId); // Fetch doctor's schedule when selected
     };
 
-    // Format the selected date to YYYY-MM-DD
     const handleDateChange = (date) => {
-        const formattedDate = date.toISOString().split('T')[0]; // Extract the date part (YYYY-MM-DD)
+        // Format the date as YYYY-MM-DD using the local timezone
+        const formattedDate = date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2);
         setSelectedDate(formattedDate);
-        // setAppointmentDetails({ ...appointmentDetails, date: formattedDate });
     };
 
     const handleSubmit = async (e) => {

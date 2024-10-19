@@ -205,24 +205,35 @@ const Home = () => {
 
             <table className="min-w-full bg-white shadow-md rounded-lg">
                 <thead>
-                    <tr>
-                        <th className="py-2 px-4">Patient ID</th>
-                        <th className="py-2 px-4">Patient Name</th>
+                    <tr className='text-left'>
+                        <th className="py-2 px-4">Sr.</th>
+                        {role == "doctor" && (
+                            <th className="py-2 px-4">Patient ID</th>
+                        )}
+                        <th className="py-2 px-4">
+                            {role === "doctor" ? "Patient " : "Doctor "} Name
+                        </th>
                         <th className="py-2 px-4">Diagnosis</th>
                         <th className="py-2 px-4">Test Result</th>
                         <th className="py-2 px-4">Record Date</th>
-                        <th className="py-2 px-4">Actions</th>
+                        {role === 'doctor' && (
+                            <th className="py-2 px-4">Actions</th>
+                        )}
                     </tr>
                 </thead>
                 <tbody>
-                    {patientRecords.map((record) => (
+                    {patientRecords.map((record, index) => (
                         <tr
                             key={record.id}
                             className="hover:bg-gray-200 cursor-pointer"
                             onClick={() => setSelectedRecord(record)} // Set selected record on click
                         >
-                            <td className="py-2 px-4">{record.patient_id}</td>
-                            <td className="py-2 px-4">{record.patient_name}</td>
+                            <td className="py-2 px-4">{index}</td>
+                            {role == "doctor" && (
+                                <td className="py-2 px-4">{record.patient_id}</td>
+
+                            )}
+                            <td className="py-2 px-4">{record.name || "NA"}</td>
                             <td className="py-2 px-4">{record.diagnosis}</td>
                             <td className="py-2 px-4">{record.test_result}</td>
                             <td className="py-2 px-4">{new Date(record.record_date).toLocaleDateString()}</td>
@@ -248,12 +259,12 @@ const Home = () => {
 
             {selectedRecord && (
                 <div className="mt-6">
-                    <h3 className="text-lg font-bold mb-2">Prescriptions for {selectedRecord.patient_name}</h3>
+                    <h3 className="text-lg font-bold mb-2">Prescriptions By {selectedRecord.name}</h3>
                     <table className="min-w-full bg-white shadow-md rounded-lg">
                         <thead>
-                            <tr>
+                            <tr className='text-left'>
                                 <th className="py-2 px-4">Medicine</th>
-                                <th className="py-2 px-4">Frequency</th>
+                                <th className="py-2 px-4">Frequency(M,A,E)</th>
                                 <th className="py-2 px-4">Start</th>
                                 <th className="py-2 px-4">End</th>
                             </tr>

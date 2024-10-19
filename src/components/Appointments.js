@@ -10,6 +10,7 @@ const Appointments = () => {
     const [newStatus, setNewStatus] = useState(''); // State to hold the new status selected by the doctor
     const [newDate, setNewDate] = useState(''); // State to hold the new date for reschedule
     const [newTime, setNewTime] = useState(''); // State to hold the new time for reschedule
+    const role = localStorage.getItem('role')
 
     useEffect(() => {
         const fetchAppointments = async () => {
@@ -32,17 +33,6 @@ const Appointments = () => {
         fetchAppointments();
     }, []); // Empty dependency array to run only once
 
-    // const handleCancelAppointment = async (id) => {
-    //     try {
-    //         await axiosInstance.delete(`/appointment/remove?id=${id}`);
-    //         console.log('Canceled appointment with ID:', id);
-    //         // Remove the appointment from the state after deletion
-    //         setAppointments((prevAppointments) => prevAppointments.filter((appointment) => appointment.id !== id));
-    //     } catch (error) {
-    //         console.log('Error canceling appointment:', error);
-    //         setError('Failed to cancel appointment.');
-    //     }
-    // };
 
     const handleUpdateAppointment = (appointment) => {
         setSelectedAppointment(appointment); // Set the selected appointment
@@ -93,7 +83,11 @@ const Appointments = () => {
                 <table className="min-w-full bg-white">
                     <thead>
                         <tr className="w-full bg-gray-200 text-left">
-                            <th className="py-2 px-4">Patient ID</th>
+                            <th className="py-2 px-4">Sr.</th>
+                            <th className="py-2 px-4">{role==="patient" ? "Doctor": "Patient"} Name</th>
+                            {role === "patient" && (
+                            <th className="py-2 px-4">Speciality</th>
+                            )}
                             <th className="py-2 px-4">Date</th>
                             <th className="py-2 px-4">Time</th>
                             <th className="py-2 px-4">Status</th>
@@ -103,11 +97,16 @@ const Appointments = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {appointments.map((appointment) => (
+                        {appointments.map((appointment, index) => (
                             <tr key={appointment.id} className="border-t">
-                                <td className="py-2 px-4">{appointment.patient_id}</td>
-                                <td className="py-2 px-4">{appointment.date}</td>
-                                <td className="py-2 px-4">{appointment.time}</td>
+                                <td className="py-2 px-4">{index}</td>
+                                <td className="py-2 px-4">{appointment.name}</td>
+                                {role === "patient" && (
+                            <td className="py-2 px-4">{appointment.speciality || "N/A"}</td>
+
+                            )}
+                                <td className="py-2 px-4">{appointment.date.split(' ')[0]}</td>
+                                <td className="py-2 px-4">{new Date(appointment.date).toLocaleTimeString()}</td>
                                 <td className="py-2 px-4">{appointment.status}</td>
                                 {localStorage.getItem('role') === 'doctor' && (
                                     <td className="py-2 px-4">
@@ -118,12 +117,6 @@ const Appointments = () => {
                                                 onClick={() => handleUpdateAppointment(appointment)}
                                                 title="Edit Appointment"
                                             />
-                                            {/* Delete Icon */}
-                                            {/* <FaTrashAlt
-                                                className="cursor-pointer text-red-600 hover:text-red-800"
-                                                onClick={() => handleCancelAppointment(appointment.id)}
-                                                title="Delete Appointment"
-                                            /> */}
                                         </div>
                                     </td>
                                 )}
