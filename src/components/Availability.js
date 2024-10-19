@@ -18,16 +18,27 @@ const Availability = () => {
             try {
                 const uid = localStorage.getItem('uid');
                 const resp = await axiosInstance.get(`/doctor?id=${uid}`);
-                
-                // Assuming the response has 'days', 'startTime', 'endTime'
-                setAvailability({
-                    days: resp.data.days || [],
-                    startTime: resp.data.startTime || '',
-                    endTime: resp.data.endTime || '',
-                });
+
+                if (resp.data && resp.data.days) {
+                    // If schedule exists
+                    setAvailability({
+                        days: resp.data.days || [],
+                        startTime: resp.data.startTime || '',
+                        endTime: resp.data.endTime || '',
+                    });
+                } else {
+                    // No schedule found (new user)
+                    throw new Error('No schedule found');
+                }
             } catch (error) {
+                // Schedule not found or failed to load
                 console.error('Error fetching schedule:', error);
-                setError('Failed to load schedule.');
+                setError('No schedule set yet. Please set your availability.');
+                setAvailability({
+                    days: [],
+                    startTime: '',
+                    endTime: '',
+                });
             } finally {
                 setLoading(false);
             }
@@ -53,7 +64,7 @@ const Availability = () => {
             const uid = localStorage.getItem('uid');
             const resp = await axiosInstance.post(`/doctor/update_schedule/${uid}`, availability);
             console.log('Schedule updated:', resp.data);
-            alert("schedule updated successfully")
+            alert("Schedule updated successfully");
         } catch (error) {
             console.error('Error updating schedule:', error);
             setError('Failed to update schedule.');
@@ -64,14 +75,18 @@ const Availability = () => {
         return <div>Loading schedule...</div>;
     }
 
-    if (error) {
-        return <div className="text-red-600">{error}</div>;
-    }
-
     return (
         <div>
             <h2 className="text-2xl font-bold mb-4">Set Availability</h2>
 
+            {/* Display Error or Info Message */}
+            {error && (
+                <div className="text-red-600 mb-4">
+                    {error} {/* Display friendly message if schedule hasn't been set */}
+                </div>
+            )}
+
+            {/* Days selection */}
             <div className="mb-4">
                 <label className="block mb-2 font-semibold">Select Days of the Week</label>
                 <div className="grid grid-cols-2 gap-4">
@@ -90,6 +105,7 @@ const Availability = () => {
                 </div>
             </div>
 
+            {/* Time inputs */}
             <div className="grid grid-cols-2 gap-4">
                 <div>
                     <label className="block mb-2">Start Time</label>
@@ -113,6 +129,7 @@ const Availability = () => {
                 </div>
             </div>
 
+            {/* Submit button */}
             <button
                 onClick={handleSetAvailability}
                 className="mt-4 bg-blue-600 text-white px-4 py-2 rounded-lg"

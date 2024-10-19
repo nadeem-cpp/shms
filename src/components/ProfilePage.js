@@ -13,22 +13,46 @@ const Profile = () => {
         address: '',
         ...(role === 'doctor' ? { speciality: '' } : { heart_rate: '', blood_pressure: '' })  // Dynamic fields
     });
-
+    const [error, setError] = useState('');
     const navigate = useNavigate();
 
     const handleInputChange = (e) => {
         setProfileData({ ...profileData, [e.target.name]: e.target.value });
     };
 
+    const calculateAge = (dob) => {
+        const birthDate = new Date(dob);
+        const today = new Date();
+        const age = today.getFullYear() - birthDate.getFullYear();
+        const monthDifference = today.getMonth() - birthDate.getMonth();
+        if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())) {
+            return age - 1;
+        }
+        return age;
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setError('');  // Clear any previous errors
+
+        const age = calculateAge(profileData.dob);
+
+        // Age validation based on role
+        if (role === 'doctor' && age < 18) {
+            setError('Doctor must be at least 18 years old.');
+            return;
+        } else if (role === 'patient' && age < 2) {
+            setError('Patient must be at least 2 years old.');
+            return;
+        }
+
         try {
             const url = `/${role}/profile`;  // Set the appropriate API endpoint based on role
             await axiosInstance.post(url, { user_id: uid, ...profileData });
             // Redirect to the respective dashboard after profile creation
             navigate(`/${role}-dashboard`);
         } catch (error) {
-            console.log(error.response.data.error);
+            setError(error.response.data.error);
         }
     };
 
@@ -38,6 +62,11 @@ const Profile = () => {
                 <h2 className="text-2xl font-bold text-center text-blue-600 mb-6">
                     {role === 'doctor' ? 'Doctor' : 'Patient'} Profile
                 </h2>
+                {error && (
+                    <div className="text-red-500 text-sm text-center mb-4">
+                        {error}
+                    </div>
+                )}
                 <form onSubmit={handleSubmit}>
                     {/* Common Fields */}
                     <div className="mb-4">
@@ -120,36 +149,6 @@ const Profile = () => {
                             />
                         </div>
                     )}
-
-                    {/* Patient-specific fields */}
-                    {/* {role === 'patient' && (
-                        <>
-                            <div className="mb-4">
-                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="heart_rate">Heart Rate</label>
-                                <input
-                                    id="heart_rate"
-                                    name="heart_rate"
-                                    type="number"
-                                    value={profileData.heart_rate}
-                                    onChange={handleInputChange}
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg"
-                                    required
-                                />
-                            </div>
-                            <div className="mb-4">
-                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="blood_pressure">Blood Pressure</label>
-                                <input
-                                    id="blood_pressure"
-                                    name="blood_pressure"
-                                    type="text"
-                                    value={profileData.blood_pressure}
-                                    onChange={handleInputChange}
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg"
-                                    required
-                                />
-                            </div>
-                        </>
-                    )} */}
 
                     <div className="flex items-center justify-between">
                         <button
