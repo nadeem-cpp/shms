@@ -22,7 +22,7 @@ const Home = () => {
     useEffect(() => {
         async function getRecords() {
             try {
-                const resp = await axiosInstance.get(`/records?id=${localStorage.getItem('uid')}`);
+                const resp = await axiosInstance.get(`/records/get?id=${localStorage.getItem('uid')}`);
                 setPatientRecords(resp.data);
             } catch (error) {
                 console.error('Error fetching records:', error);
@@ -69,7 +69,7 @@ const Home = () => {
                 console.log(newRecord)
                 const resp = await axiosInstance.post('/records/add', newRecord);
                 let record = { ...newRecord, name: resp.data.patient_name, record_date: new Date() };
-                setPatientRecords([...patientRecords, record]);
+                setPatientRecords([record, ...patientRecords]);
             }
             setShowForm(false);
             setNewRecord({

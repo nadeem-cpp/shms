@@ -17,7 +17,7 @@ const Availability = () => {
         const fetchSchedule = async () => {
             try {
                 const uid = localStorage.getItem('uid');
-                const resp = await axiosInstance.get(`/doctor?id=${uid}`);
+                const resp = await axiosInstance.get(`/doctor/schedule?id=${uid}`);
 
                 if (resp.data && resp.data.days) {
                     // If schedule exists

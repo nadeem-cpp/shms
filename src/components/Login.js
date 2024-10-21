@@ -15,9 +15,13 @@ const Login = () => {
       const data = response.data;
       localStorage.setItem('uid', data.id);
       localStorage.setItem('token', data.token);
+
+      // Set the Authorization header for future requests
+      axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${data.token}`;
+
       const role = response.data.role;
       localStorage.setItem('role', role);
-      
+
       if (role === 'admin') {
         navigate('/admin-dashboard');
       } else if (role === 'doctor') {
@@ -74,7 +78,7 @@ const Login = () => {
             </button>
           </div>
         </form>
-        
+
         {/* Signup Link for new users */}
         <p className="mt-4 text-center text-gray-600">
           New user? <Link to="/signup" className="text-blue-600 hover:underline">Sign up here</Link>

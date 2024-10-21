@@ -21,7 +21,7 @@ const AddAppointment = () => {
         // Fetch all doctors from the API
         const fetchDoctors = async () => {
             try {
-                const response = await axiosInstance.get('/doctor'); // Fetch doctors
+                const response = await axiosInstance.get('/doctor/get'); // Fetch doctors
                 setDoctors(response.data);
             } catch (error) {
                 console.log('Error fetching doctors:', error);
@@ -34,7 +34,7 @@ const AddAppointment = () => {
     // Fetch doctor's schedule when a doctor is selected
     const fetchDoctorSchedule = async (doctorId) => {
         try {
-            const response = await axiosInstance.get(`/doctor?id=${doctorId}`);
+            const response = await axiosInstance.get(`/doctor/schedule?id=${doctorId}`);
             setDoctorSchedule(response.data);
 
             // Generate time slots based on startTime and endTime from the doctor's schedule
@@ -72,7 +72,7 @@ const AddAppointment = () => {
             console.log(details);
             // Call the API to add the appointment
             const response = await axiosInstance.post('/appointment/add', details);
-
+            alert('Appointment added')
             console.log('Appointment successfully added:', response.data);
             // Navigate to the patient dashboard or show a success message
         } catch (error) {

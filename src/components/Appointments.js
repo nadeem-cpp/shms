@@ -19,9 +19,9 @@ const Appointments = () => {
                 const role = localStorage.getItem('role');
                 const uid = localStorage.getItem('uid');
                 if (role === "doctor") {
-                    resp = await axiosInstance.get(`/appointment?id=${uid}&d=true`);
+                    resp = await axiosInstance.get(`/appointment/get?id=${uid}&d=true`);
                 } else {
-                    resp = await axiosInstance.get(`/appointment?id=${uid}`);
+                    resp = await axiosInstance.get(`/appointment/get?id=${uid}`);
                 }
                 setAppointments(resp.data); // Update state with fetched appointments
             } catch (error) {

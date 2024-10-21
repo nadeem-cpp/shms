@@ -4,7 +4,7 @@ const axiosInstance = axios.create({
   baseURL: 'http://127.0.0.1:5000',
   headers: {
     'Content-Type': 'application/json',
-    'Authorization': `Bearer ${localStorage.getItem('token')}`
+    // 'Authorization': `Bearer ${localStorage.getItem('token')}`
   },
 });
 
@@ -17,6 +17,8 @@ axiosInstance.interceptors.response.use(
       localStorage.removeItem('token');
       localStorage.removeItem('uid');
       localStorage.removeItem('role');
+
+      alert('Your Session has been expired! Login again')
 
       // Use window.location or navigate to force user back to login
       window.location.href = '/'; // Redirect user to login page

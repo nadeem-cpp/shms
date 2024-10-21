@@ -14,7 +14,7 @@ const ReportAdmin = () => {
 
     // Fetch the list of doctors from the API
     useEffect(() => {
-        axiosInstance.get('/doctor')
+        axiosInstance.get('/doctor/get')
             .then(response => {
                 setDoctors(response.data);
             })
