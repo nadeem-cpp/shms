@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Pie } from 'react-chartjs-2';
 import Chart from 'chart.js/auto';
 import axiosInstance from '../axiosConfig';
 
@@ -15,7 +14,7 @@ const Performance = () => {
 
     // Fetch feedback data from the API
     useEffect(() => {
-        axiosInstance.get('/user/feedback') // Replace with your actual feedback API endpoint
+        axiosInstance.get('/user/feedback')
             .then(response => {
                 const { total_feedbacks, positive_feedbacks, negative_feedbacks } = response.data;
 

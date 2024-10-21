@@ -6,7 +6,7 @@ const UserList = () => {
     const [selectedUserDetails, setSelectedUserDetails] = useState(null); // State for storing selected user details
     const [roleFilter, setRoleFilter] = useState('');
     const [emailFilter, setEmailFilter] = useState('');
-    // Fetch users from the API
+    
     useEffect(() => {
         axiosInstance.get('/user/get')
             .then(response => {
@@ -17,7 +17,6 @@ const UserList = () => {
             });
     }, []);
 
-    // Delete a user
     const deleteUser = (userId) => {
         let resp = window.confirm("This action will delete all data related to user, including appointments, and all record")
         if (resp) {
@@ -33,9 +32,9 @@ const UserList = () => {
 
     // Fetch user details when a row is clicked
     const fetchUserDetails = (userId, role) => {
-        axiosInstance.get(`/${role}/details?id=${userId}`) // Adjust the API endpoint as needed
+        axiosInstance.get(`/${role}/details?id=${userId}`)
             .then(response => {
-                setSelectedUserDetails(response.data); // Set the fetched details in state
+                setSelectedUserDetails(response.data);
             })
             .catch(error => {
                 console.error("There was an error fetching user details!", error);

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axiosInstance from '../axiosConfig';
-import { FaTrashAlt, FaEdit } from 'react-icons/fa'; // Importing icons from React Icons
+import { FaEdit } from 'react-icons/fa'; // Importing icons from React Icons
 
 const Appointments = () => {
     const [appointments, setAppointments] = useState([]); // State to hold fetched appointments
@@ -55,7 +55,6 @@ const Appointments = () => {
                 updateData.date = newDate;
                 updateData.time = newTime;
             }
-            console.log(updateData)
             // Update the appointment with the new status, date, and time
             const resp = await axiosInstance.put(`/appointment/update`, updateData);
             console.log('Updated appointment with ID:', selectedAppointment.id);
@@ -91,7 +90,7 @@ const Appointments = () => {
                             <th className="py-2 px-4">Date</th>
                             <th className="py-2 px-4">Time</th>
                             <th className="py-2 px-4">Status</th>
-                            {localStorage.getItem('role') === 'doctor' && (
+                            {role === 'doctor' && (
                                 <th className="py-2 px-4">Actions</th>
                             )}
                         </tr>
@@ -108,7 +107,7 @@ const Appointments = () => {
                                 <td className="py-2 px-4">{appointment.date.split(' ')[0]}</td>
                                 <td className="py-2 px-4">{new Date(appointment.date).toLocaleTimeString()}</td>
                                 <td className="py-2 px-4">{appointment.status}</td>
-                                {localStorage.getItem('role') === 'doctor' && (
+                                {role === 'doctor' && (
                                     <td className="py-2 px-4">
                                         <div className="flex space-x-4">
                                             {/* Update Icon */}

@@ -1,15 +1,11 @@
 import axios from 'axios';
 
-// Create an Axios instance with a base URL and default settings
 const axiosInstance = axios.create({
-  baseURL: 'http://127.0.0.1:5000',  // API base URL
+  baseURL: 'http://127.0.0.1:5000',
   headers: {
-    'Content-Type': 'application/json',  // default headers
+    'Content-Type': 'application/json',
     'Authorization': `Bearer ${localStorage.getItem('token')}`
-    // 'Access-Control-Allow-Credentials': true,
-    // 'Access-Control-Allow-Origin': 'http://127.0.0.1:5000'
   },
-  // withCredentials:true
 });
 
 // Response interceptor to check for token expiration

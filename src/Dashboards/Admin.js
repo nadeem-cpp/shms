@@ -9,12 +9,11 @@ const Admin = () => {
     const renderContent = () => {
         switch (activeTab) {
             case 'users':
-                // manage users, delete a user, update its role,
                 return <UserList />;
             case 'report':
-                return <ReportAdmin/>
-                case 'performance':
-                    return <Performance/>
+                return <ReportAdmin />
+            case 'performance':
+                return <Performance />
             default:
                 return <UserList />;
         }
@@ -36,7 +35,6 @@ const Admin = () => {
                         onClick={() => setActiveTab('report')}
                         className={`py-2 px-4 hover:bg-blue-800 rounded ${activeTab === 'report' ? 'bg-blue-800' : ''}`}
                     >
-                        {/* view report on the doctor's appointments(how many rescheduled, canceled, fullfilled), no. of patients */}
                         Report
                     </button>
                     <button
