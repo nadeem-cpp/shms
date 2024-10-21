@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import axiosInstance from '../axiosConfig';  // Import the custom axios instance
-import { useNavigate, Link } from 'react-router-dom';  // Import Link for navigation
+import axiosInstance from '../axiosConfig';
+import { useNavigate, Link } from 'react-router-dom';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -14,8 +14,9 @@ const Login = () => {
       const response = await axiosInstance.post('/user/login', { email, password });
       const data = response.data;
       localStorage.setItem('uid', data.id);
-      const role = response.data.role
-      localStorage.setItem('role', role)
+      localStorage.setItem('token', data.token);
+      const role = response.data.role;
+      localStorage.setItem('role', role);
       
       if (role === 'admin') {
         navigate('/admin-dashboard');
@@ -32,8 +33,8 @@ const Login = () => {
   };
 
   return (
-    <div className="flex h-screen justify-center items-center bg-gray-100">
-      <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-lg">
+    <div className="flex min-h-screen justify-center items-center bg-gray-100 px-4 sm:px-6 lg:px-8">
+      <div className="w-full max-w-md bg-white p-6 sm:p-8 rounded-lg shadow-lg">
         <h2 className="text-2xl font-bold text-center text-blue-600 mb-6">Smart Healthcare Management</h2>
         <form onSubmit={handleLogin}>
           {error && <p className="text-red-600 mb-4">{error}</p>}

@@ -13,7 +13,7 @@ const PatientDashboard = () => {
         switch (activeTab) {
             case 'home':
                 return (
-                    <HealthMetrics />
+                    <HealthMetrics role={"patient"} />
                 );
             case 'records':
                 return <Records/>

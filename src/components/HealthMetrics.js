@@ -6,7 +6,7 @@ import { Chart, CategoryScale, LinearScale, PointElement, LineElement, Title, To
 // Register the required components for Chart.js
 Chart.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
-const HealthMetrics = () => {
+const HealthMetrics = ({role}) => {
     const [metrics, setMetrics] = useState({
         id: localStorage.getItem('uid'),
         bloodPressure: '',

@@ -6,10 +6,9 @@ const UserList = () => {
     const [selectedUserDetails, setSelectedUserDetails] = useState(null); // State for storing selected user details
     const [roleFilter, setRoleFilter] = useState('');
     const [emailFilter, setEmailFilter] = useState('');
-
     // Fetch users from the API
     useEffect(() => {
-        axiosInstance.get('/user')
+        axiosInstance.get('/user/get')
             .then(response => {
                 setUsers(response.data);
             })
