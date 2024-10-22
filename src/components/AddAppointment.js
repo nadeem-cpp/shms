@@ -1,61 +1,45 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import axiosInstance from '../axiosConfig';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
 const AddAppointment = () => {
-    const [doctors, setDoctors] = useState([]); // List of doctors
+    const [searchQuery, setSearchQuery] = useState(''); // Search query input
+    const [doctors, setDoctors] = useState([]); // List of doctors based on search
+    const [doctorSchedule, setDoctorSchedule] = useState([]);
     const [selectedDoctor, setSelectedDoctor] = useState(''); // Selected doctor
-    const [doctorSchedule, setDoctorSchedule] = useState(null); // Doctor's available schedule
     const [selectedDate, setSelectedDate] = useState(''); // Selected date
     const [selectedTime, setSelectedTime] = useState(''); // Selected time slot
-    const [timeSlots, setTimeSlots] = useState([]);
+    const [timeSlots, setTimeSlots] = useState([]); // Available time slots
     const [appointmentDetails, setAppointmentDetails] = useState({
         uid: localStorage.getItem('uid'),
         doctorId: '',
         date: '',
-        time:''
+        time: ''
     });
 
-    useEffect(() => {
-        // Fetch all doctors from the API
-        const fetchDoctors = async () => {
-            try {
-                const response = await axiosInstance.get('/doctor/get'); // Fetch doctors
-                setDoctors(response.data);
-            } catch (error) {
-                console.log('Error fetching doctors:', error);
-            }
-        };
-
-        fetchDoctors();
-    }, []);
-
-    // Fetch doctor's schedule when a doctor is selected
-    const fetchDoctorSchedule = async (doctorId) => {
+    // Fetch doctors based on search query
+    const handleSearch = async () => {
         try {
-            const response = await axiosInstance.get(`/doctor/schedule?id=${doctorId}`);
-            setDoctorSchedule(response.data);
-
-            // Generate time slots based on startTime and endTime from the doctor's schedule
-            const { startTime, endTime } = response.data;
-            const slots = generateTimeSlots(startTime, endTime);
-            setTimeSlots(slots); // Update time slots for dropdown
+            const response = await axiosInstance.get(`/doctor/search?query=${searchQuery}`); // Search API
+            setDoctors(response.data); // Set the available doctors
         } catch (error) {
-            console.log('Error fetching doctor schedule:', error);
+            console.log('Error searching doctors:', error);
         }
     };
 
-    const handleDoctorChange = (e) => {
-        const doctorId = e.target.value;
-        setSelectedDoctor(doctorId);
-        setAppointmentDetails({ ...appointmentDetails, doctorId: doctorId });
-        fetchDoctorSchedule(doctorId); // Fetch doctor's schedule when selected
+    const handleDoctorChange = (doctor) => {
+        setSelectedDoctor(doctor.id);
+        setAppointmentDetails({ ...appointmentDetails, doctorId: doctor.id });
+        setDoctorSchedule(doctor.schedule)
+        // Generate time slots based on the doctor's schedule
+        const { startTime, endTime } = doctor.schedule;
+        const slots = generateTimeSlots(startTime, endTime);
+        setTimeSlots(slots); // Update time slots for the selected doctor
     };
 
     const handleDateChange = (date) => {
-        // Format the date as YYYY-MM-DD using the local timezone
-        const formattedDate = date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2);
+        const formattedDate = date.toISOString().split('T')[0]; // Format as YYYY-MM-DD
         setSelectedDate(formattedDate);
     };
 
@@ -63,18 +47,17 @@ const AddAppointment = () => {
         e.preventDefault();
         try {
             const time = selectedTime.split(" -")[0]; // Extract only the start time of the selected slot
-            // const fullDateTime = selectedDate + " " + convertToTime(time); // Combine selected date and time
             const details = {
                 ...appointmentDetails,
-                date: selectedDate, // Save the full datetime for submission
-                time: convertToTime(time)
+                date: selectedDate,
+                time: convertToTime(time) // Save time in correct format
             };
             console.log(details);
+
             // Call the API to add the appointment
             const response = await axiosInstance.post('/appointment/add', details);
-            alert('Appointment added')
+            alert('Appointment added successfully');
             console.log('Appointment successfully added:', response.data);
-            // Navigate to the patient dashboard or show a success message
         } catch (error) {
             console.log('Error adding appointment:', error);
         }
@@ -90,19 +73,37 @@ const AddAppointment = () => {
         return allowedDays.includes(dayOfWeek);
     };
 
+
+
     return (
         <div className="bg-white shadow-lg rounded-lg p-6 max-w-md mx-auto">
             <h2 className="text-2xl font-semibold mb-4">Schedule an Appointment</h2>
 
-            <form onSubmit={handleSubmit}>
+            <div className="mb-4">
+                <label className="block mb-2 font-semibold">Search Doctor by Name or Speciality</label>
+                <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                    placeholder="Enter doctor name or speciality"
+                />
+                <button
+                    onClick={handleSearch}
+                    className="bg-blue-600 text-white px-4 py-2 rounded-lg mt-2"
+                >
+                    Search
+                </button>
+            </div>
+
+            {doctors.length > 0 && (
                 <div className="mb-4">
                     <label className="block mb-2 font-semibold">Select Doctor</label>
                     <select
-                        value={selectedDoctor}
-                        onChange={handleDoctorChange}
+                        onChange={(e) => handleDoctorChange(doctors.find(doc => doc.id == e.target.value))}
                         className="w-full px-4 py-2 border border-gray-300 rounded-lg"
                     >
-                        <option value="" disabled>Select a doctor</option>
+                        <option value="">Select a doctor</option>
                         {doctors.map((doctor) => (
                             <option key={doctor.id} value={doctor.id}>
                                 {doctor.name}
@@ -110,51 +111,50 @@ const AddAppointment = () => {
                         ))}
                     </select>
                 </div>
+            )}
 
-                {doctorSchedule && (
-                    <>
-                        <div className="mb-4">
-                            <label className="block mb-2 font-semibold">Select a Date</label>
-                            <DatePicker
-                                selected={selectedDate ? new Date(selectedDate) : null}
-                                onChange={handleDateChange}
-                                filterDate={isDayAllowed}
-                                minDate={new Date()} // Restrict to dates from current day onwards
-                                placeholderText="Select an allowed date"
-                                className="w-full px-4 py-2 border border-gray-300 rounded-lg"
-                                dateFormat="yyyy-MM-dd" // Ensure the selected date is formatted as YYYY-MM-DD
-                            />
-                        </div>
+            {selectedDoctor && timeSlots.length > 0 && (
+                <>
+                    <div className="mb-4">
+                        <label className="block mb-2 font-semibold">Select a Date</label>
+                        <DatePicker
+                            selected={selectedDate ? new Date(selectedDate) : null}
+                            onChange={handleDateChange}
+                            filterDate={isDayAllowed}
+                            minDate={new Date()} // Restrict to dates from current day onwards
+                            placeholderText="Select a date"
+                            className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                            dateFormat="yyyy-MM-dd"
+                        />
+                    </div>
 
-                        <div className="mb-4">
-                            <label className="block mb-2 font-semibold">Available Time Slots</label>
-                            <select
-                                value={selectedTime}
-                                onChange={(e) => setSelectedTime(e.target.value)}
-                                className="w-full px-4 py-2 border border-gray-300 rounded-lg"
-                            >
-                                <option value="" disabled>Select a time slot</option>
-                                {timeSlots.map((slot) => (
-                                    <option key={slot} value={slot}>
-                                        {slot}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-                    </>
-                )}
+                    <div className="mb-4">
+                        <label className="block mb-2 font-semibold">Available Time Slots</label>
+                        <select
+                            value={selectedTime}
+                            onChange={(e) => setSelectedTime(e.target.value)}
+                            className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                        >
+                            <option value="" disabled>Select a time slot</option>
+                            {timeSlots.map((slot) => (
+                                <option key={slot} value={slot}>
+                                    {slot}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                </>
+            )}
 
-                <button
-                    type="submit"
-                    className="bg-blue-600 text-white px-4 py-2 rounded-lg w-full mt-4"
-                >
-                    Schedule Appointment
-                </button>
-            </form>
+            <button
+                onClick={handleSubmit}
+                className="bg-blue-600 text-white px-4 py-2 rounded-lg w-full mt-4"
+            >
+                Schedule Appointment
+            </button>
         </div>
     );
 };
-
 
 // Helper function to generate 30-minute time slots
 const generateTimeSlots = (startTime, endTime, slotDuration = 30) => {

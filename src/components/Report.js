@@ -83,7 +83,14 @@ const Report = () => {
     const { patient_info, latest_metrics, medical_history } = reportData;
 
     return (
-        <div className="p-4">
+
+        <div className="">
+            <button
+                onClick={generatePDF}
+                className=" p-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700"
+            >
+                Download Report as PDF
+            </button>
             <h1 className="text-2xl font-bold mb-4">Patient Report</h1>
             <div className="bg-white p-4 rounded-lg shadow-md">
                 <h2 className="text-lg font-semibold mb-2">Patient Info</h2>
@@ -117,13 +124,6 @@ const Report = () => {
                     </div>
                 ))}
             </div>
-
-            <button
-                onClick={generatePDF}
-                className="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700"
-            >
-                Download Report as PDF
-            </button>
         </div>
     );
 };

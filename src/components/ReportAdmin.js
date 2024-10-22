@@ -7,21 +7,25 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 const ReportAdmin = () => {
-    const [doctors, setDoctors] = useState([]);
-    const [selectedDoctor, setSelectedDoctor] = useState(null);
-    const [doctorData, setDoctorData] = useState(null);
-    const [performance, setPerformance] = useState('');
+    const [doctors, setDoctors] = useState([]); // List of doctors based on search
+    const [searchQuery, setSearchQuery] = useState(''); // Search query input
+    const [selectedDoctor, setSelectedDoctor] = useState(null); // Selected doctor
+    const [doctorData, setDoctorData] = useState(null); // Selected doctor's report data
+    const [performance, setPerformance] = useState(''); // Performance status
 
-    // Fetch the list of doctors from the API
-    useEffect(() => {
-        axiosInstance.get('/doctor/get')
-            .then(response => {
-                setDoctors(response.data);
-            })
-            .catch(error => {
-                console.error("Error fetching doctors:", error);
-            });
-    }, []);
+    // Fetch doctors based on search query
+    const handleSearch = async () => {
+        if (searchQuery) {
+            try {
+                const response = await axiosInstance.get(`/doctor/search?query=${searchQuery}`); // Search API
+                setDoctors(response.data); // Set the available doctors
+            } catch (error) {
+                console.error("Error searching doctors:", error);
+            }
+        } else {
+            setDoctors([]); // Clear the doctor list if the search query is empty
+        }
+    };
 
     // Fetch the selected doctor's report data
     const fetchDoctorData = (doctorId) => {
@@ -45,7 +49,7 @@ const ReportAdmin = () => {
 
     // Calculate performance status based on the appointment data
     const calculatePerformance = (data) => {
-        const { fulfilled_appointments, canceled_appointments, rescheduled_appointments, total_appointments } = data;
+        const { fulfilled_appointments, canceled_appointments, total_appointments } = data;
         const fulfilledRate = (fulfilled_appointments / total_appointments) * 100;
         const canceledRate = (canceled_appointments / total_appointments) * 100;
 
@@ -84,23 +88,39 @@ const ReportAdmin = () => {
         <div>
             <h2 className="text-2xl font-bold mb-4">Doctor's Appointment Report</h2>
 
-            {/* Doctor selection dropdown */}
+            {/* Search Doctor by Name or Specialty */}
             <div className="mb-4">
-                <label htmlFor="doctor" className="block text-sm font-medium text-gray-700">Select Doctor:</label>
-                <select
-                    id="doctor"
-                    value={selectedDoctor || ''}
-                    onChange={handleDoctorSelect}
+                <label htmlFor="search" className="block text-sm font-medium text-gray-700">Search Doctor:</label>
+                <input
+                    type="text"
+                    id="search"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    onKeyPress={(e) => e.key === 'Enter' && handleSearch()} // Search on Enter key press
                     className="mt-1 block w-full p-2 border border-gray-300 bg-white rounded-md"
-                >
-                    <option value="" disabled>Select a doctor</option>
-                    {doctors.map((doctor) => (
-                        <option key={doctor.id} value={doctor.id}>
-                            {doctor.name}
-                        </option>
-                    ))}
-                </select>
+                    placeholder="Enter doctor name or specialty"
+                />
             </div>
+
+            {/* Doctor selection dropdown */}
+            {doctors.length > 0 && (
+                <div className="mb-4">
+                    <label htmlFor="doctor" className="block text-sm font-medium text-gray-700">Select Doctor:</label>
+                    <select
+                        id="doctor"
+                        value={selectedDoctor || ''}
+                        onChange={handleDoctorSelect}
+                        className="mt-1 block w-full p-2 border border-gray-300 bg-white rounded-md"
+                    >
+                        <option value="" disabled>Select a doctor</option>
+                        {doctors.map((doctor) => (
+                            <option key={doctor.id} value={doctor.id}>
+                                {doctor.name}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+            )}
 
             {/* Show doctor's appointment data after selection */}
             {doctorData ? (
