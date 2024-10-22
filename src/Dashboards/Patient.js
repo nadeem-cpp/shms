@@ -5,15 +5,16 @@ import AddAppointment from '../components/AddAppointment';
 import HealthMetrics from '../components/HealthMetrics';
 import Report from '../components/Report';
 import Feedback from '../components/Feedback';
+import DashboardLayout from '../components/DashboardLayout';
 
-const PatientDashboard = () => {
+const PatientDashboard = ({token}) => {
     const [activeTab, setActiveTab] = useState('home');
 
     const renderContent = () => {
         switch (activeTab) {
             case 'home':
                 return (
-                    <HealthMetrics role={"patient"} />
+                    <HealthMetrics/>
                 );
             case 'records':
                 return <Records/>
@@ -31,6 +32,7 @@ const PatientDashboard = () => {
     };
 
     return (
+        <DashboardLayout>
         <div className="flex h-screen bg-gray-100">
             {/* Sidebar */}
             <div className="w-64 bg-blue-900 text-white flex flex-col">
@@ -81,6 +83,7 @@ const PatientDashboard = () => {
                 {renderContent()}
             </div>
         </div>
+        </DashboardLayout>
     );
 };
 

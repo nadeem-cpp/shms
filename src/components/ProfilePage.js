@@ -50,7 +50,8 @@ const Profile = () => {
             const url = `/${role}/profile`;  // Set the appropriate API endpoint based on role
             await axiosInstance.post(url, { user_id: uid, ...profileData });
             // Redirect to the respective dashboard after profile creation
-            navigate(`/${role}-dashboard`);
+            // navigate(`/${role}-dashboard`);
+            navigate(`/`);
         } catch (error) {
             setError(error.response.data.error);
         }
@@ -122,7 +123,7 @@ const Profile = () => {
                         </select>
                     </div>
                     <div className="mb-4">
-                        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="address">Address</label>
+                        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="address">City</label>
                         <input
                             id="address"
                             name="address"

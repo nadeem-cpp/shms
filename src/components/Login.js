@@ -17,7 +17,7 @@ const Login = () => {
       localStorage.setItem('token', data.token);
 
       // Set the Authorization header for future requests
-      axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${data.token}`;
+      // axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${data.token}`;
 
       const role = response.data.role;
       localStorage.setItem('role', role);
@@ -26,10 +26,10 @@ const Login = () => {
         navigate('/admin-dashboard');
       } else if (role === 'doctor') {
         navigate('/doctor-dashboard');
-      } else if (role === 'patient') {
-        navigate('/patient-dashboard');
+      } else if (role === 'patient' ) {
+        navigate('/patient-dashboard', {token:data.token});
       } else {
-        navigate('/home');
+        navigate('/');
       }
     } catch (error) {
       setError('Invalid email or password');

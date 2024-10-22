@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import Home from '../components/Home';
 import Appointments from '../components/Appointments';
 import Availability from '../components/Availability';
+import DashboardLayout from '../components/DashboardLayout';
 
 const DoctorDashboard = () => {
     const [activeTab, setActiveTab] = useState('home');
@@ -20,6 +21,8 @@ const DoctorDashboard = () => {
     };
 
     return (
+        <DashboardLayout>
+
         <div className="flex h-screen bg-gray-100">
             {/* Sidebar */}
             <div className="w-64 bg-blue-900 text-white flex flex-col">
@@ -52,6 +55,8 @@ const DoctorDashboard = () => {
                 {renderContent()}
             </div>
         </div>
+        </DashboardLayout>
+
     );
 };
 

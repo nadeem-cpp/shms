@@ -22,7 +22,13 @@ const Home = () => {
     useEffect(() => {
         async function getRecords() {
             try {
-                const resp = await axiosInstance.get(`/records/get?id=${localStorage.getItem('uid')}`);
+                const resp = await axiosInstance.get(`/records/get?id=${localStorage.getItem('uid')}`,
+                {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+                }
+            );
                 setPatientRecords(resp.data);
             } catch (error) {
                 console.error('Error fetching records:', error);

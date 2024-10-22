@@ -6,7 +6,7 @@ import { Chart, CategoryScale, LinearScale, PointElement, LineElement, Title, To
 // Register the required components for Chart.js
 Chart.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
-const HealthMetrics = ({role}) => {
+const HealthMetrics = () => {
     const [metrics, setMetrics] = useState({
         id: localStorage.getItem('uid'),
         bloodPressure: '',
@@ -14,6 +14,8 @@ const HealthMetrics = ({role}) => {
         weight: '',
         temperature: ''
     });
+
+    const [attempt, setAttempt] = useState(0)
 
     const [showForm, setShowForm] = useState(false);
     const [metricHistory, setMetricHistory] = useState([]);  // State to store the history of metrics for graph
@@ -33,7 +35,7 @@ const HealthMetrics = ({role}) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        axiosInstance.post('/records/metrics', metrics)
+        axiosInstance.post('/records/metrics', metrics,)
             .then((response) => {
                 console.log(response.data);
                 fetchMetricsHistory(); // Fetch updated history after submission
@@ -53,7 +55,12 @@ const HealthMetrics = ({role}) => {
 
     // Function to fetch historical health metrics data
     const fetchMetricsHistory = () => {
-        axiosInstance.get('/records/metrics', { params: { id: localStorage.getItem('uid') } })
+        axiosInstance.get(`/records/metrics?id=${localStorage.getItem('uid')}`,
+            {
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            })
             .then((response) => {
                 setMetricHistory(response.data);
             })
@@ -113,7 +120,7 @@ const HealthMetrics = ({role}) => {
                         <form onSubmit={handleSubmit} className="space-y-4 mt-4">
                             <div>
                                 <label className="block font-medium text-gray-700">Blood Pressure (mmHg):</label>
-                                <input 
+                                <input
                                     type="text"
                                     name="bloodPressure"
                                     value={metrics.bloodPressure}
@@ -124,7 +131,7 @@ const HealthMetrics = ({role}) => {
                             </div>
                             <div>
                                 <label className="block font-medium text-gray-700">Heart Rate (bpm):</label>
-                                <input 
+                                <input
                                     type="number"
                                     name="heartRate"
                                     value={metrics.heartRate}
@@ -135,7 +142,7 @@ const HealthMetrics = ({role}) => {
                             </div>
                             <div>
                                 <label className="block font-medium text-gray-700">Weight (kg):</label>
-                                <input 
+                                <input
                                     type="number"
                                     name="weight"
                                     value={metrics.weight}
@@ -146,7 +153,7 @@ const HealthMetrics = ({role}) => {
                             </div>
                             <div>
                                 <label className="block font-medium text-gray-700">Temperature (°C):</label>
-                                <input 
+                                <input
                                     type="number"
                                     name="temperature"
                                     value={metrics.temperature}
@@ -156,13 +163,13 @@ const HealthMetrics = ({role}) => {
                                 />
                             </div>
                             <div className="flex justify-between">
-                                <button 
+                                <button
                                     type="submit"
                                     className="bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700"
                                 >
                                     Submit
                                 </button>
-                                <button 
+                                <button
                                     type="button"
                                     onClick={() => setShowForm(false)} // Cancel button to hide form
                                     className="bg-red-600 text-white py-2 px-4 rounded hover:bg-red-700"

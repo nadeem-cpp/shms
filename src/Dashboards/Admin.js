@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import UserList from '../components/UserList';
 import Performance from '../components/Performance';
 import ReportAdmin from '../components/ReportAdmin';
+import DashboardLayout from '../components/DashboardLayout';
 
 const Admin = () => {
     const [activeTab, setActiveTab] = useState('users'); // default to 'users'
@@ -20,6 +21,8 @@ const Admin = () => {
     };
 
     return (
+        <DashboardLayout>
+
         <div className="flex h-screen bg-gray-100">
             {/* Sidebar */}
             <div className="w-64 bg-blue-900 text-white flex flex-col">
@@ -51,6 +54,7 @@ const Admin = () => {
                 {renderContent()}
             </div>
         </div>
+        </DashboardLayout>
     );
 };
 

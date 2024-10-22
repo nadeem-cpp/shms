@@ -83,6 +83,9 @@ const Appointments = () => {
                     <thead>
                         <tr className="w-full bg-gray-200 text-left">
                             <th className="py-2 px-4">Sr.</th>
+                            {role === "doctor" && (
+                            <th className="py-2 px-4">ID</th>
+                            )}
                             <th className="py-2 px-4">{role==="patient" ? "Doctor": "Patient"} Name</th>
                             {role === "patient" && (
                             <th className="py-2 px-4">Speciality</th>
@@ -99,6 +102,9 @@ const Appointments = () => {
                         {appointments.map((appointment, index) => (
                             <tr key={appointment.id} className="border-t">
                                 <td className="py-2 px-4">{index}</td>
+                                {role === "doctor" && (
+                            <th className="py-2 px-4">{appointment.patient_id}</th>
+                            )}
                                 <td className="py-2 px-4">{appointment.name}</td>
                                 {role === "patient" && (
                             <td className="py-2 px-4">{appointment.speciality || "N/A"}</td>

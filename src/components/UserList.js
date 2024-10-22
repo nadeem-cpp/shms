@@ -8,7 +8,11 @@ const UserList = () => {
     const [emailFilter, setEmailFilter] = useState('');
     
     useEffect(() => {
-        axiosInstance.get('/user/get')
+        axiosInstance.get('/user/get', {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+        })
             .then(response => {
                 setUsers(response.data);
             })
