@@ -9,9 +9,9 @@ const UserList = () => {
     
     useEffect(() => {
         axiosInstance.get('/user/get', {
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
+            // headers: {
+                // 'Authorization': `Bearer ${localStorage.getItem('token')}`
+        // }
         })
             .then(response => {
                 setUsers(response.data);
@@ -79,7 +79,7 @@ const UserList = () => {
                 <thead>
                     <tr className="text-left">
                         <th className="py-2 px-4">Sr.</th>
-                        <th className="py-2 px-4">ID</th>
+                        <th className="py-2 px-4">PID</th>
                         <th className="py-2 px-4">Email</th>
                         <th className="py-2 px-4">Role</th>
                         <th className="py-2 px-4">Actions</th>

@@ -23,12 +23,12 @@ const Home = () => {
         async function getRecords() {
             try {
                 const resp = await axiosInstance.get(`/records/get?id=${localStorage.getItem('uid')}`,
-                {
-                    headers: {
-                        'Authorization': `Bearer ${localStorage.getItem('token')}`
-                }
-                }
-            );
+                    {
+                        //     headers: {
+                        //         'Authorization': `Bearer ${localStorage.getItem('token')}`
+                        // }
+                    }
+                );
                 setPatientRecords(resp.data);
             } catch (error) {
                 console.error('Error fetching records:', error);
@@ -74,7 +74,7 @@ const Home = () => {
             } else {
                 console.log(newRecord)
                 const resp = await axiosInstance.post('/records/add', newRecord);
-                let record = { ...newRecord, name: resp.data.patient_name, record_date: new Date() };
+                let record = { ...newRecord, name: resp.data.patient_name, id: resp.data.record_id, record_date: new Date() };
                 setPatientRecords([record, ...patientRecords]);
             }
             setShowForm(false);
@@ -242,7 +242,7 @@ const Home = () => {
                             <td className="py-2 px-4">{record.name || "NA"}</td>
                             <td className="py-2 px-4">{record.diagnosis}</td>
                             <td className="py-2 px-4">{record.test_result}</td>
-                            <td className="py-2 px-4">{new Date(record.record_date).toLocaleDateString()}</td>
+                            <td className="py-2 px-4">{new Date(record.record_date).toLocaleDateString() || ""}</td>
                             <td className="py-2 px-4 flex space-x-4">
                                 {/* Conditionally show Edit and Delete icons if the role is doctor */}
                                 {role === 'doctor' && (
@@ -280,8 +280,20 @@ const Home = () => {
                                 <tr key={index}>
                                     <td className="py-2 px-4">{prescription.medicine}</td>
                                     <td className="py-2 px-4">{prescription.frequency}</td>
-                                    <td className="py-2 px-4">{new Date(prescription.start).toLocaleDateString()}</td>
-                                    <td className="py-2 px-4">{new Date(prescription.end).toLocaleDateString()}</td>
+                                    
+                                    <td className="py-2 px-4">
+                                        {isNaN(new Date(prescription.start))
+                                            ? "not found"
+                                            : new Date(prescription.start).toLocaleDateString()}
+                                    </td>
+
+                                    <td className="py-2 px-4">
+                                        {isNaN(new Date(prescription.end))
+                                            ? "not found"
+                                            : new Date(prescription.end).toLocaleDateString()}
+                                    </td>
+                                    {/* <td className="py-2 px-4">{new Date(prescription.start).toLocaleDateString() || " "}</td> */}
+                                    {/* <td className="py-2 px-4">{new Date(prescription.end).toLocaleDateString() || " "}</td> */}
                                 </tr>
                             ))}
                         </tbody>

@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import axiosInstance from '../axiosConfig';
 import { useNavigate, Link } from 'react-router-dom';
+import AuthContext from '../context/AuthContext';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -8,19 +9,23 @@ const Login = () => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
+  const {login} = useContext(AuthContext);
+
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
       const response = await axiosInstance.post('/user/login', { email, password });
       const data = response.data;
-      localStorage.setItem('uid', data.id);
-      localStorage.setItem('token', data.token);
+      // localStorage.setItem('uid', data.id);
+      // localStorage.setItem('token', data.token);
+
+      login(data.token, data.role, data.id)
 
       // Set the Authorization header for future requests
       // axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${data.token}`;
 
       const role = response.data.role;
-      localStorage.setItem('role', role);
+      // localStorage.setItem('role', role);
 
       if (role === 'admin') {
         navigate('/admin-dashboard');
