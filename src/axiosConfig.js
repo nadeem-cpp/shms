@@ -37,6 +37,14 @@ axiosInstance.interceptors.response.use(
       // Redirect user to login page
       window.location.href = '/';
     }
+    // Check for 422 Unauthorized access (forbidden actions)
+    if (error.response.status === 403) {
+      alert('You are not authorized to access this resource.');
+      window.location.href = '/not-allowed'; // Redirect to "Not Allowed" page
+    }
+
+
+
     return Promise.reject(error);
   }
 );

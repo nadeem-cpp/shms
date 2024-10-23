@@ -5,6 +5,7 @@ import ProfilePage from './components/ProfilePage';
 import Doctor from './Dashboards/Doctor';
 import Patient from './Dashboards/Patient';
 import Admin from './Dashboards/Admin';
+import NotAllowed from './pages/NotAllowed';
 
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
         <Route path="/admin-dashboard" element={<Admin />} />
         <Route path="/doctor-dashboard" element={<Doctor />} />
         <Route path="/patient-dashboard" element={<Patient />} />
+        <Route path="/not-allowed" element={<NotAllowed/>} />
       </Routes>
     </Router>
   );

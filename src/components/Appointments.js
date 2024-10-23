@@ -84,7 +84,7 @@ const Appointments = () => {
                         <tr className="w-full bg-gray-200 text-left">
                             <th className="py-2 px-4">Sr.</th>
                             {role === "doctor" && (
-                            <th className="py-2 px-4">ID</th>
+                            <th className="py-2 px-4">PID</th>
                             )}
                             <th className="py-2 px-4">{role==="patient" ? "Doctor": "Patient"} Name</th>
                             {role === "patient" && (

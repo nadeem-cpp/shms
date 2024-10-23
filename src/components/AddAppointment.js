@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axiosInstance from '../axiosConfig';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import { RiH1 } from 'react-icons/ri';
 
 const AddAppointment = () => {
     const [searchQuery, setSearchQuery] = useState(''); // Search query input
@@ -95,7 +96,9 @@ const AddAppointment = () => {
                     Search
                 </button>
             </div>
-
+            {doctors.length == 0 && (
+                <h1>No Doctor Found</h1>
+            )}
             {doctors.length > 0 && (
                 <div className="mb-4">
                     <label className="block mb-2 font-semibold">Select Doctor</label>
