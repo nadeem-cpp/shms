@@ -19,10 +19,17 @@ const AddAppointment = () => {
         time: ''
     });
 
+    const [error, setError] = useState('')
     // Fetch doctors based on search query
     const handleSearch = async () => {
         try {
             const response = await axiosInstance.get(`/doctor/search?query=${searchQuery}`); // Search API
+            if(response.data.length == 0){
+            setError("No Doctor Found")
+            }
+            else{
+                setError("")
+            }
             setDoctors(response.data); // Set the available doctors
         } catch (error) {
             console.log('Error searching doctors:', error);
@@ -32,11 +39,19 @@ const AddAppointment = () => {
     const handleDoctorChange = (doctor) => {
         setSelectedDoctor(doctor.id);
         setAppointmentDetails({ ...appointmentDetails, doctorId: doctor.id });
-        setDoctorSchedule(doctor.schedule)
-        // Generate time slots based on the doctor's schedule
-        const { startTime, endTime } = doctor.schedule;
-        const slots = generateTimeSlots(startTime, endTime);
-        setTimeSlots(slots); // Update time slots for the selected doctor
+        if (doctor.schedule != null){
+            console.log("Schedule found")
+            setDoctorSchedule(doctor.schedule)
+            // Generate time slots based on the doctor's schedule
+            const { startTime, endTime } = doctor.schedule;
+            const slots = generateTimeSlots(startTime, endTime);
+            setTimeSlots(slots); // Update time slots for the selected doctor
+        }
+        else{
+            setDoctorSchedule([])
+            setError("Schedule not found for selected doctor")
+        }
+        
     };
 
     const handleDateChange = (date) => {
@@ -96,9 +111,7 @@ const AddAppointment = () => {
                     Search
                 </button>
             </div>
-            {doctors.length == 0 && (
-                <h1>No Doctor Found</h1>
-            )}
+            <h1 className='text-red-500'>{error}</h1>
             {doctors.length > 0 && (
                 <div className="mb-4">
                     <label className="block mb-2 font-semibold">Select Doctor</label>
@@ -115,8 +128,7 @@ const AddAppointment = () => {
                     </select>
                 </div>
             )}
-
-            {selectedDoctor && timeSlots.length > 0 && (
+            {selectedDoctor  && timeSlots.length > 0 && (
                 <>
                     <div className="mb-4">
                         <label className="block mb-2 font-semibold">Select a Date</label>

@@ -7,7 +7,7 @@ import Report from '../components/Report';
 import Feedback from '../components/Feedback';
 import DashboardLayout from '../components/DashboardLayout';
 
-const PatientDashboard = ({token}) => {
+const PatientDashboard = () => {
     const [activeTab, setActiveTab] = useState('home');
 
     const renderContent = () => {
@@ -61,7 +61,7 @@ const PatientDashboard = ({token}) => {
                         onClick={() => setActiveTab('add')}
                         className={`py-2 px-4 hover:bg-blue-800 rounded ${activeTab === 'add' ? 'bg-blue-800' : ''}`}
                     >
-                        Add Appointments
+                        Book Appointment
                     </button>
                     <button
                         onClick={() => setActiveTab('report')}

@@ -5,7 +5,7 @@ import ReportAdmin from '../components/ReportAdmin';
 import DashboardLayout from '../components/DashboardLayout';
 
 const Admin = () => {
-    const [activeTab, setActiveTab] = useState('users'); // default to 'users'
+    const [activeTab, setActiveTab] = useState('users');
 
     const renderContent = () => {
         switch (activeTab) {
@@ -38,13 +38,13 @@ const Admin = () => {
                         onClick={() => setActiveTab('report')}
                         className={`py-2 px-4 hover:bg-blue-800 rounded ${activeTab === 'report' ? 'bg-blue-800' : ''}`}
                     >
-                        Report
+                        Doctor Performance
                     </button>
                     <button
                         onClick={() => setActiveTab('performance')}
                         className={`py-2 px-4 hover:bg-blue-800 rounded ${activeTab === 'performance' ? 'bg-blue-800' : ''}`}
                     >
-                        View Performance
+                        System Performance
                     </button>
                 </nav>
             </div>
