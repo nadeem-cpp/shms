@@ -26,23 +26,26 @@ axiosInstance.interceptors.request.use(
 axiosInstance.interceptors.response.use(
   (response) => response, // If the response is successful, return it
   (error) => {
-    if (error.response && error.response.status === 401) {
+    if(error.response){
+      const status = error.response.status
+
+
+    // Check for 422 Unauthorized access (forbidden actions)
+    if (status === 403) {
+      alert('You are not authorized to access this resource.');
+      window.location.href = '/not-allowed'; // Redirect to "Not Allowed" page
+    }
+    if (status === 401 || status == 422) {
       // Token has expired or is invalid, clear auth data and redirect
       localStorage.removeItem('token');
       localStorage.removeItem('uid');
       localStorage.removeItem('role');
 
       alert('Your session has expired! Please log in again.');
-
-      // Redirect user to login page
       window.location.href = '/';
     }
-    // Check for 422 Unauthorized access (forbidden actions)
-    if (error.response.status === 403) {
-      alert('You are not authorized to access this resource.');
-      window.location.href = '/not-allowed'; // Redirect to "Not Allowed" page
-    }
 
+  }
 
 
     return Promise.reject(error);
