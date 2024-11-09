@@ -8,14 +8,13 @@ Chart.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Too
 
 const HealthMetrics = () => {
     const [metrics, setMetrics] = useState({
-        id: localStorage.getItem('uid'),
+        id: '',
         bloodPressure: '',
         heartRate: '',
         weight: '',
         temperature: ''
     });
-
-    const [attempt, setAttempt] = useState(0)
+    const role = localStorage.getItem('role'); // Get user role
 
     const [showForm, setShowForm] = useState(false);
     const [metricHistory, setMetricHistory] = useState([]);  // State to store the history of metrics for graph
@@ -35,10 +34,12 @@ const HealthMetrics = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        // const data = {...metrics, patient_id:patientID}
         axiosInstance.post('/records/metrics', metrics,)
             .then((response) => {
                 console.log(response.data);
-                fetchMetricsHistory(); // Fetch updated history after submission
+                alert('added successfully!');
+                // fetchMetricsHistory(); // Fetch updated history after submission
             })
             .catch((error) => {
                 console.error("There was an error submitting the metrics!", error);
@@ -62,6 +63,7 @@ const HealthMetrics = () => {
                 }
             })
             .then((response) => {
+                console.log(response.data)
                 setMetricHistory(response.data);
             })
             .catch((error) => {
@@ -70,7 +72,9 @@ const HealthMetrics = () => {
     };
 
     useEffect(() => {
-        fetchMetricsHistory();
+        if(role == 'patient'){
+            fetchMetricsHistory();
+        }
     }, []); // Fetch metrics history when component mounts
 
     // Data for the Line chart
@@ -118,6 +122,16 @@ const HealthMetrics = () => {
                 {showForm && (
                     <div>
                         <form onSubmit={handleSubmit} className="space-y-4 mt-4">
+                        <div>
+                                <label className="block font-medium text-gray-700"> Patient ID</label>
+                                <input
+                                    type="text"
+                                    name="id"
+                                    value={metrics.id}
+                                    onChange={handleChange}
+                                    className="mt-1 p-2 border border-gray-300 rounded w-full"
+                                />
+                            </div>
                             <div>
                                 <label className="block font-medium text-gray-700">Blood Pressure (mmHg):</label>
                                 <input
@@ -182,14 +196,17 @@ const HealthMetrics = () => {
                 )}
 
                 {/* Second column: Chart */}
-                <div className={`${showForm ? 'w-full' : 'w-[90%] mx-auto'}`}>
+                {role == 'patient' && (
+                    <div className={`${showForm ? 'w-full' : 'w-[90%] mx-auto'}`}>
                     <h3 className="text-lg font-bold mb-4">Health Metrics Over Time</h3>
                     <Line data={chartData} />
                 </div>
+                )}
+                
             </div>
-
+            
             {/* Add Metrics Button */}
-            {!showForm && (
+            {role == 'doctor' && !showForm && (
                 <div className="mt-6 flex justify-center">
                     <button
                         onClick={() => setShowForm(true)}

@@ -265,7 +265,9 @@ const Home = () => {
 
             {selectedRecord && (
                 <div className="mt-6">
-                    <h3 className="text-lg font-bold mb-2">Prescriptions By {selectedRecord.name}</h3>
+                    <h3 className="text-lg font-bold mb-2">Prescriptions
+                    {`${role === 'doctor' ? ' for ' : ' by '}`}
+                    {selectedRecord.name}</h3>
                     <table className="min-w-full bg-white shadow-md rounded-lg">
                         <thead>
                             <tr className='text-left'>

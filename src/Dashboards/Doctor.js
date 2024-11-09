@@ -3,6 +3,8 @@ import Home from '../components/Home';
 import Appointments from '../components/Appointments';
 import Availability from '../components/Availability';
 import DashboardLayout from '../components/DashboardLayout';
+import HealthMetrics from '../components/HealthMetrics';
+
 
 const DoctorDashboard = () => {
     const [activeTab, setActiveTab] = useState('home');
@@ -11,6 +13,8 @@ const DoctorDashboard = () => {
         switch (activeTab) {
             case 'home':
                 return <Home />;
+            case 'matrics':
+                return <HealthMetrics />;
             case 'appointments':
                 return <Appointments />;
             case 'availability':
@@ -33,6 +37,12 @@ const DoctorDashboard = () => {
                         className={`py-2 px-4 hover:bg-blue-800 rounded ${activeTab === 'home' ? 'bg-blue-800' : ''}`}
                     >
                         Home
+                    </button>
+                    <button 
+                        onClick={() => setActiveTab('matrics')} 
+                        className={`py-2 px-4 hover:bg-blue-800 rounded ${activeTab === 'matrics' ? 'bg-blue-800' : ''}`}
+                    >
+                        Health Matrics
                     </button>
                     <button 
                         onClick={() => setActiveTab('appointments')} 

@@ -41,6 +41,7 @@ const AddAppointment = () => {
         setAppointmentDetails({ ...appointmentDetails, doctorId: doctor.id });
         if (doctor.schedule != null){
             console.log("Schedule found")
+            console.log(doctor.schedule)
             setDoctorSchedule(doctor.schedule)
             // Generate time slots based on the doctor's schedule
             const { startTime, endTime } = doctor.schedule;
