@@ -22,7 +22,7 @@ const HealthMetrics = () => {
     const handleChange = (e) => {
         const { name, value } = e.target;
 
-        if (name === 'bloodPressure' || name === 'heartRate') {
+        if ( name === 'heartRate') {
             if (!/^\d*$/.test(value)) return; // Allow only integers
         }
 
@@ -75,16 +75,22 @@ const HealthMetrics = () => {
         if(role == 'patient'){
             fetchMetricsHistory();
         }
-    }, []); // Fetch metrics history when component mounts
+    }, []);
 
-    // Data for the Line chart
     const chartData = {
         labels: metricHistory.map(item => new Date(item.date).toLocaleString()), // Dates for x-axis
         datasets: [
             {
-                label: 'Blood Pressure (mmHg)',
-                data: metricHistory.map(item => item.bloodPressure),
+                label: 'Blood Pressure (Systolic mmHg)',
+                data: metricHistory.map(item => (item.bloodPressure.split('/')[0])),
                 borderColor: 'rgb(255, 99, 132)',
+                backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                fill: false,
+            },
+            {
+                label: 'Blood Pressure (Diastolic mmHg)',
+                data: metricHistory.map(item => (item.bloodPressure.split('/')[1])),
+                borderColor: 'rgb(200, 99, 130)',
                 backgroundColor: 'rgba(255, 99, 132, 0.5)',
                 fill: false,
             },
