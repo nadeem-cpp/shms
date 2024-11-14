@@ -60,11 +60,16 @@ const Availability = () => {
     };
 
     const handleSetAvailability = async () => {
+        if (availability.startTime && availability.endTime && availability.startTime >= availability.endTime) {
+            setError('End time must be later than start time.');
+            return;
+        }
         try {
             const uid = localStorage.getItem('uid');
             const resp = await axiosInstance.post(`/doctor/update_schedule/${uid}`, availability);
             console.log('Schedule updated:', resp.data);
             alert("Schedule updated successfully");
+            setError(null); // Clear error on successful submission
         } catch (error) {
             console.error('Error updating schedule:', error);
             setError('Failed to update schedule.');
